@@ -22,14 +22,15 @@ public class UsuarioDAO {
 
 	// insert
 	public void insert(Usuario usuario) {
-		String sql = "insert into usuario (nome, senha, dataCadastro) values (?,?,?)";
+		String sql = "insert into usuario (nome, senha, dataCadastro) values (?,?,?,?)";
 
 		try {
 			PreparedStatement stmt = conexao.prepareStatement(sql);
 			// complemento da query
 			stmt.setString(1, usuario.getNome());
-			stmt.setString(2, usuario.getSenha());
-			stmt.setDate(3, usuario.getDataCadastro());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setString(3, usuario.getSenha());
+			stmt.setDate(4, usuario.getDataCadastro());
 			// executar a query
 			stmt.execute();
 			// fechar a operação
@@ -48,10 +49,10 @@ public class UsuarioDAO {
 			PreparedStatement stmt = conexao.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 
-			while (rs.next()) { // enquanto tiver dados na tabela
-				Usuario usuario = new Usuario();
+			while (rs.next()) { 
 				usuario.setId(rs.getLong("id"));
 				usuario.setNome(rs.getString("Nome"));
+				usuario.setEmail(rs.getString("Email"));
 				usuario.setSenha(rs.getString("senha"));
 				usuario.setData(rs.getDate("dataCadastro"));
 				usuarios.add(usuario); // cada objeto usuario adicionado a lista de usuarios
@@ -81,6 +82,7 @@ public class UsuarioDAO {
 				usuario = new Usuario();
 				usuario.setId(rs.getLong("id"));
 				usuario.setNome(rs.getString("Nome"));
+				usuario.setEmail(rs.getString("Email"));
 				usuario.setSenha(rs.getString("senha"));
 				usuario.setData(rs.getDate("dataCadastro"));
 			}
@@ -95,11 +97,12 @@ public class UsuarioDAO {
 
 	// update
 	public void update(Usuario usuario) {
-		String sql = "update usuario set nome=?, senha=? where id=?";
+		String sql = "update usuario set nome=?, senha=?, email=? where id=?";
 		try {
 			PreparedStatement stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, usuario.getNome());
-			stmt.setString(2, usuario.getSenha());
+			stmt.setString(2, usuario.getEmail());
+			stmt.setString(3, usuario.getSenha());
 			stmt.setLong(3, usuario.getId());
 			stmt.execute();
 			stmt.close();
